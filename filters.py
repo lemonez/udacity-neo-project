@@ -56,7 +56,11 @@ class AttributeFilter:
 
     def __call__(self, approach):
         """Invoke `self(approach)`."""
-        return self.op(self.get(approach), self.value)
+        try:
+            return self.op(self.get(approach), self.value)
+        except TypeError as e:
+            breakpoint()
+
 
     @classmethod
     def get(cls, approach):
@@ -144,10 +148,10 @@ def create_filters(date=None, start_date=None, end_date=None,
         f = DateFilter(operator.eq, date)
         filters.append(f)
     if start_date:
-        f = DateFilter(operator.ge, date)
+        f = DateFilter(operator.ge, start_date)
         filters.append(f)
     if end_date:
-        f = DateFilter(operator.le, date)
+        f = DateFilter(operator.le, end_date)
         filters.append(f)
     if distance_min:
         f = DistanceFilter(operator.ge, distance_min)
@@ -185,8 +189,9 @@ def limit(iterator, n=None):
     """
     if not n:
         return iterator
-    limited = []
-    for i, value in enumerate(iterator):
-        while i < n:
-            limited.append(value)
-    return limited
+    return itertools.islice(iterator, n)
+    # limited = []
+    # for i, value in enumerate(iterator):
+    #     while i < n:
+    #         limited.append(value)
+    # return limited
