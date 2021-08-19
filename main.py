@@ -218,6 +218,7 @@ def query(database, args):
         hazardous=args.hazardous
     )
     # Query the database with the collection of filters.
+    # This is a generator function, so `results` is a lazy iterator.
     results = database.query(filters)
 
     if not args.outfile:
