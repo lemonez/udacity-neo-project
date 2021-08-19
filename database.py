@@ -12,6 +12,14 @@ data on NEOs and close approaches extracted by `extract.load_neos` and
 You'll edit this file in Tasks 2 and 3.
 """
 
+"""
+import extract, database, importlib
+cas_collection = extract.load_approaches()
+neo_collection = extract.load_neos()
+ndb = database.NEODatabase(neo_collection, cas_collection)
+"""
+
+
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
 
@@ -20,6 +28,7 @@ class NEODatabase:
     help fetch NEOs by primary designation or by name and to help speed up
     querying for close approaches that match criteria.
     """
+
     def __init__(self, neos, approaches):
         """Create a new `NEODatabase`.
 
@@ -41,9 +50,31 @@ class NEODatabase:
         self._neos = neos
         self._approaches = approaches
 
-        # TODO: What additional auxiliary data structures will be useful?
+        self._neo_designation_cache = {}
 
-        # TODO: Link together the NEOs and their close approaches.
+        self._link_neos_to_approaches()
+
+    def __str__(self):
+        return f'An instance of {self.__class__.__name__}'
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(neos, approaches)'
+
+# TODO: What additional auxiliary data structures will be useful?
+    def _cache_neo_by_designation(self, designation, neo):
+        # perhaps implement a cache here for NEOs already seen in the query
+        self._neo_designation_cache[designation] = neo
+        #print(f'\rcached: {neo.fullname}', end='', sep=' ', flush=True)
+
+    def _link_neos_to_approaches(self):
+        print("Building database: linking NEOs to close approaches...")
+        for approach in self._approaches:
+            neo = self.get_neo_by_designation(approach._designation)
+            # assign the NEO to this approach
+            approach.neo = neo
+            # add this approach to the NEO's approach list
+            neo.approaches.append(approach)
+        print('\n')
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -58,7 +89,12 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation.
+        if designation in self._neo_designation_cache.keys():
+            return self._neo_designation_cache[designation]
+        for neo in self._neos:
+            if neo.designation.lower() == designation.lower():
+                self._cache_neo_by_designation(designation, neo)
+                return neo
         return None
 
     def get_neo_by_name(self, name):
@@ -75,7 +111,15 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        # TODO: Fetch an NEO by its name.
+        # handle None or empty string
+        if not name:
+            return None
+        for neo in self._neos:
+            try:
+                if neo.name.lower() == name.lower():
+                    return neo
+            except AttributeError:
+                continue
         return None
 
     def query(self, filters=()):
@@ -94,4 +138,9 @@ class NEODatabase:
         """
         # TODO: Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
-            yield approach
+            # run each approach through all filters
+            for filter in filters:
+                if not filter(approach):
+                    # break out of nested for loop
+                    break
+                yield approach
