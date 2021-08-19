@@ -187,6 +187,6 @@ def limit(iterator, n=None):
         return iterator
     limited = []
     for i, value in enumerate(iterator):
-        if i < n:
+        while i < n:
             limited.append(value)
     return limited
