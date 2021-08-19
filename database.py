@@ -17,6 +17,8 @@ import extract, database, importlib
 cas_collection = extract.load_approaches()
 neo_collection = extract.load_neos()
 ndb = database.NEODatabase(neo_collection, cas_collection)
+ca1 = cas_collection[1]
+ca2 = cas_collection[2]
 """
 
 
@@ -141,6 +143,6 @@ class NEODatabase:
             # run each approach through all filters
             for filter in filters:
                 if not filter(approach):
-                    # break out of nested for loop
+                    # break out of nested for loop b/c must pass all filters
                     break
                 yield approach
