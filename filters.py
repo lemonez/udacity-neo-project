@@ -56,11 +56,7 @@ class AttributeFilter:
 
     def __call__(self, approach):
         """Invoke `self(approach)`."""
-        try:
-            return self.op(self.get(approach), self.value)
-        except TypeError as e:
-            breakpoint()
-
+        return self.op(self.get(approach), self.value)
 
     @classmethod
     def get(cls, approach):
@@ -166,13 +162,13 @@ def create_filters(date=None, start_date=None, end_date=None,
         f = VelocityFilter(operator.le, velocity_max)
         filters.append(f)
     if diameter_min:
-        f = DiameterFilter(operator.ge, velocity_max)
+        f = DiameterFilter(operator.ge, diameter_min)
         filters.append(f)
     if diameter_max:
-        f = DiameterFilter(operator.le, velocity_max)
+        f = DiameterFilter(operator.le, diameter_max)
         filters.append(f)
     if hazardous is not None:
-        f = VelocityFilter(operator.is_, hazardous)
+        f = HazardFilter(operator.eq, hazardous)
         filters.append(f)
 
     return filters
@@ -187,9 +183,9 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    if not n:
+    if n == 0 or n is None:
         return iterator
-    return itertools.islice(iterator, n)
+    return list(itertools.islice(iterator, n))
     # limited = []
     # for i, value in enumerate(iterator):
     #     while i < n:
