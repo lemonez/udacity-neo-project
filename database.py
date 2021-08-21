@@ -62,7 +62,6 @@ class NEODatabase:
     def __repr__(self):
         return f'{self.__class__.__name__}(neos, approaches)'
 
-# TODO: What additional auxiliary data structures will be useful?
     def _cache_neo_by_designation(self, designation, neo):
         # perhaps implement a cache here for NEOs already seen in the query
         self._neo_designation_cache[designation] = neo
@@ -138,7 +137,6 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
         if not filters:
             for approach in self._approaches:
                 yield approach

@@ -139,7 +139,6 @@ def create_filters(date=None, start_date=None, end_date=None,
     :return: A collection of filters for use with `query`.
     """
     filters = []
-    # TODO: Decide how you will represent your filters.
     if date:
         f = DateFilter(operator.eq, date)
         filters.append(f)
