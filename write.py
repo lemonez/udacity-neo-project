@@ -68,7 +68,7 @@ def write_to_json(results, filename):
 
 
 def format_ca(ca):
-    """Takes a CloseApproach objects and formats for JSON output."""
+    """Format CloseApproach object for JSON output."""
     name = ca.neo.name
     if name is None:
         name = ""

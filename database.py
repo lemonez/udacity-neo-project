@@ -57,9 +57,11 @@ class NEODatabase:
         self._link_neos_to_approaches()
 
     def __str__(self):
+        """Return `str(self)`, a human-readable string representation of this object."""
         return f'An instance of {self.__class__.__name__}'
 
     def __repr__(self):
+        """Return `repr(self)`, a computer-readable string representation of this object."""
         return f'{self.__class__.__name__}(neos, approaches)'
 
     def _cache_neo_by_designation(self, designation, neo):

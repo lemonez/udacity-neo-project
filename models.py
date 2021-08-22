@@ -129,6 +129,7 @@ class CloseApproach:
 
     @property
     def fullname(self):
+        """Retrieve name of NearEarthObject."""
         if not self.neo:
             return 'unspecified NEO'
         return f"NEO {self.neo.fullname}"

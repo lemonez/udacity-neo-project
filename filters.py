@@ -71,36 +71,52 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
 class DateFilter(AttributeFilter):
+    """Filter for CloseApproach date attribute."""
+
     @classmethod
     def get(cls, approach):
+        """Get the instance's date."""
         return approach.time.date()
 
 
 class DistanceFilter(AttributeFilter):
+    """Filter for CloseApproach distance attribute."""
+
     @classmethod
     def get(cls, approach):
+        """Get the instance's distance."""
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
+    """Filter for CloseApproach velocity attribute."""
+
     @classmethod
     def get(cls, approach):
+        """Get the instance's velocity."""
         return approach.velocity
 
 
 class DiameterFilter(AttributeFilter):
+    """Filter for NearEarthObject diameter attribute."""
+
     @classmethod
     def get(cls, approach):
+        """Get the instance's diameter."""
         return approach.neo.diameter
 
 
 class HazardFilter(AttributeFilter):
+    """Filter for NearEarthObject hazard potential."""
+
     @classmethod
     def get(cls, approach):
+        """Get the instance's hazard potential."""
         return approach.neo.hazardous
 
 
